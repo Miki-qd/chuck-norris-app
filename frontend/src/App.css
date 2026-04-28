@@ -5,14 +5,15 @@
 }
 
 .title {
-  color: #333;
+  color: #d3d3d3;
 }
 
 .register-form {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   width: 300px;
   gap: 15px;
+ 
 }
 
 .register-input {
