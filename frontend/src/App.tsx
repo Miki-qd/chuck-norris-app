@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
 
 function App() {
@@ -8,10 +8,7 @@ function App() {
   const [password, setPassword] = useState('');
   const requestData = { email, password };
 
-  const [joke, setJoke] = useState<string>('Preparing a joke...');
-  const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [impersonateName, setImpersonateName] = useState<string>('');
+  const [joke] = useState<string>('Preparing a joke...');
 
   // Register function
   const handleRegister = (e: any) => {
@@ -70,14 +67,21 @@ function App() {
     <div className="app-container">
       {user ? (
         <div className="logged-in-view">
-          <h2 className="title">Welcome, {user.email}!</h2>
-          <button onClick={() => setUser(null)} className="logout-button">
-            Logout
-          </button>
+          <div className="choose-section">
+            <h3 className="subtitle">Here's a random Chuck Norris joke for you:</h3>
+            <p className="joke">{joke}</p>
+          </div>
+
+          <div className="joke-section">
+            <h2 className="title">Welcome, {user.email}!</h2>
+            <button onClick={() => setUser(null)} className="logout-button">
+              Logout
+            </button>
+          </div>
         </div>
       ) : (
-
         <>
+          <img src="/chuck.png" alt="chuck-norris" />
           <h2 className="title">
             {authMode === 'login' ? 'Login' : 'Register'}
           </h2>
@@ -86,32 +90,29 @@ function App() {
             onSubmit={authMode === 'login' ? handleLogin : handleRegister}
             className="register-form"
           >
-            
-            
-          <div className="input-group">
-          <label className="label">E-mail</label>
-          <input 
-          className="input-field"
-          type="email" 
-          placeholder="Type your email" 
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          />
-          </div>
-            
+            <div className="input-group">
+              <label className="label">E-mail</label>
+              <input
+                className="input-field"
+                type="email"
+                placeholder="Type your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className="input-group">
-          <label className="label">Password</label>
-          <input 
-          className="input-field"
-          type="password" 
-          placeholder="Type your password" 
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-             />
-           </div>
+            <div className="input-group">
+              <label className="label">Password</label>
+              <input
+                className="input-field"
+                type="password"
+                placeholder="Type your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
 
             <button type="submit" className="submit-button">
               {authMode === 'login' ? 'Login' : 'Register'}
