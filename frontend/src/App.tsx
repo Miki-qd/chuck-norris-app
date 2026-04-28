@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
@@ -7,6 +7,11 @@ function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const requestData = { email, password };
+
+  const [joke, setJoke] = useState<string>('Preparing a joke...');
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [impersonateName, setImpersonateName] = useState<string>('');
 
   // Register function
   const handleRegister = (e: any) => {
@@ -45,21 +50,33 @@ function App() {
         throw new Error('Invalid credentials');
       })
       .then((data) => {
+        if (data && data.email) {
+          alert('Login successful!');
+        } else {
+          throw new Error('Empty user object returned');
+        }
         setUser(data);
       })
-      .catch(() => alert('Wrong email or password!'));
+      .catch((error) => {
+        if (error.message === 'Invalid credentials') {
+          alert('Wrong email or password!');
+        } else {
+          alert('An error occurred during login.');
+        }
+      });
   };
 
   return (
     <div className="app-container">
       {user ? (
         <div className="logged-in-view">
-          <h2>Welcome, {user.email}!</h2>
+          <h2 className="title">Welcome, {user.email}!</h2>
           <button onClick={() => setUser(null)} className="logout-button">
             Logout
           </button>
         </div>
       ) : (
+
         <>
           <h2 className="title">
             {authMode === 'login' ? 'Login' : 'Register'}
@@ -69,23 +86,32 @@ function App() {
             onSubmit={authMode === 'login' ? handleLogin : handleRegister}
             className="register-form"
           >
-            <input
-              className="register-input"
-              type="email"
-              placeholder="Insert Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            
+            
+          <div className="input-group">
+          <label className="label">E-mail</label>
+          <input 
+          className="input-field"
+          type="email" 
+          placeholder="Type your email" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          />
+          </div>
+            
 
-            <input
-              className="register-input"
-              type="password"
-              placeholder="Insert Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+          <div className="input-group">
+          <label className="label">Password</label>
+          <input 
+          className="input-field"
+          type="password" 
+          placeholder="Type your password" 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+             />
+           </div>
 
             <button type="submit" className="submit-button">
               {authMode === 'login' ? 'Login' : 'Register'}
