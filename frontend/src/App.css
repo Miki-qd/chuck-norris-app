@@ -20,22 +20,173 @@ body {
   margin: 10%;
 }
 
+.chuck-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.chuck-logo img {
+  max-width: 100px;
+  height: auto;
+  padding: 10px;
+}
+
+#getr{
+  color: #333;
+}
+
+#guns {
+  width: 300px;
+  object-fit: cover;
+  border-radius: 30px;
+  border: 4px solid white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  margin-top: -90px;
+  margin-bottom: 20px;
+}
+
 .logged-in-view{
   display: flex;
   flex-direction: row;
+  padding: 50px;
+  font-family: sans-serif;
+  margin: 10%;
+  border-radius: 25px;
+  gap: 20px;
 }
 
-.joke-section {
-  background-color: #888;
+.sidebar-logo img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   padding: 20px;
   border-radius: 10px;
+}
+
+.nav-item {
+  padding: 10px;
+  color: white;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.nav-item:hover {
+  text-decoration: underline;
 }
 
 .choose-section {
   background-color: #888;
   padding: 20px;
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 250px;
 }
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.joke-section {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.joke {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+  font-size: 18px;
+  font-style: italic;
+  color: #555;
+}
+
+.joke-inputs {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.joke-inside {
+  width: 250px;
+  padding: 14px 16px;
+  border: 1px solid #e0c8d1;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  outline: none;
+  color: #333;
+  background-color: transparent;
+}
+
+.joke-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.joke-button {
+  width: 200px;
+  padding: 10px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+
+
+#joke-button-1{
+  background-color: #007bff;
+}
+
+#joke-button-1:hover{
+  background-color: #0056b3;
+}
+
+#joke-button-2{
+  background-color: #28a745;
+}
+
+#joke-button-2:hover{
+  background-color: #238c36;
+}
+  
+
 
 .title {
   color: #474747;
@@ -81,7 +232,7 @@ body {
 .register-form {
   display: inline-flex;
   flex-direction: column;
-  width: 300px;
+  width: 600px;
   gap: 15px;
 }
 
@@ -92,6 +243,14 @@ body {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+#footer-text{
+  color: rgb(134, 160, 184);
+  padding: 10px;
+  text-align: center;
+  font-style: italic;
+  font-size: small;
 }
 
 .submit-button:hover {
@@ -116,14 +275,6 @@ body {
   text-align: center;
 }
 
-.logout-button {
-  padding: 10px;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
 .logout-button:hover {
   background-color: #c82333;
