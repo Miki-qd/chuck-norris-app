@@ -68,18 +68,47 @@ function App() {
       {user ? (
         <div className="logged-in-view">
           <div className="choose-section">
-            <h3 className="subtitle">Here's a random Chuck Norris joke for you:</h3>
-            <p className="joke">{joke}</p>
+            <aside className="sidebar">
+            <div className="sidebar-logo">
+              <img src="/chuck-icon.png" alt="Logo" /> {/* Podmień na ścieżkę do ikony twarzy */}
+            </div>
+            <h2 className="title">Welcome, {user.email}!</h2>
+            
+            <nav className="sidebar-nav">
+              <button className="nav-item active">RANDOM JOKE</button>
+              <button className="nav-item">MY JOKES</button>
+              <button className="nav-item">ADD JOKE</button>
+            </nav>
+
+            <div className="sidebar-footer">
+              <button onClick={() => setUser(null)} className="logout-button">
+                LOG OUT
+              </button>
+              <p className="footer-text">made with Chuck by Chuck - 2024</p>
+            </div>
+          </aside>
           </div>
 
           <div className="joke-section">
-            <h2 className="title">Welcome, {user.email}!</h2>
-            <button onClick={() => setUser(null)} className="logout-button">
-              Logout
-            </button>
+            
+            <div className="chuck-header-image">
+               {<img src="/chuck.png" alt="Chuck"/>} 
+               <h2>Get your random Chuck Norris joke!</h2>
+               <p className="joke">{joke}</p>
+               <div className="joke-section">
+                <input type="text" placeholder="Enter your name" />
+                <select name="" id="" ></select>
+                </div>
+               <div className="joke-buttons">
+               <button className="joke-button">New Joke</button>
+               <button className="joke-button">Save Joke</button>
+               </div>
+            </div>
+
           </div>
         </div>
       ) : (
+        
         <>
           <img src="/chuck.png" alt="chuck-norris" />
           <h2 className="title">
