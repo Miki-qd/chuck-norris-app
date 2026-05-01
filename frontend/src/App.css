@@ -279,3 +279,92 @@ body {
 .logout-button:hover {
   background-color: #c82333;
 }
+
+/* My Jokes List Styles */
+.jokes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Custom Scrollbar for Jokes List */
+.jokes-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.jokes-list::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 4px;
+}
+ 
+.jokes-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1; 
+  border-radius: 4px;
+}
+
+.jokes-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8; 
+}
+
+.joke-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  gap: 15px;
+  transition: background-color 0.2s ease;
+  border-radius: 8px;
+}
+
+/* Highlight entire row when hovering over the delete button */
+.joke-list-item:has(.delete-joke-btn:hover) {
+  background-color: #ffe6e6;
+}
+
+.joke-list-item:last-child {
+  border-bottom: none;
+}
+
+.joke-number {
+  font-weight: bold;
+  color: #007bff;
+  min-width: 25px;
+}
+
+.joke-list-text {
+  flex-grow: 1;
+  font-style: italic;
+  color: #333;
+}
+
+.delete-joke-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #dc3545;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: transform 0.2s;
+}
+
+/* Add a slight scale effect instead of background change to the button itself */
+.delete-joke-btn:hover {
+  transform: scale(1.1);
+}
+
+.delete-icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
