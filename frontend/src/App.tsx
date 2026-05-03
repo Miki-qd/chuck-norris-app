@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { motion, AnimatePresence } from "framer-motion";
 import "./App.css";
 
 function App() {
@@ -18,6 +19,19 @@ function App() {
   const [savedJokes, setSavedJokes] = useState<any[]>([]);
 
   const [customJoke, setCustomJoke] = useState<string>("");
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem('theme') === 'dark';
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDarkMode]);
   // Fetch saved jokes
   const fetchMyJokes = () => {
     fetch(`http://localhost:3000/jokes/${user.email}`)
@@ -206,6 +220,13 @@ function App() {
   return (
     <>
       <Toaster position="top-center" />
+      <button 
+        onClick={() => setIsDarkMode(!isDarkMode)} 
+        className="floating-theme-toggle"
+        title="Toggle Dark Mode"
+      >
+        {isDarkMode ? '☀️' : '🌙'}
+      </button>
       {user ? (
         <div className="dashboard-layout">
           <div className="sidebar-container">
@@ -232,13 +253,28 @@ function App() {
           </div>
 
           <div className="main-content">
-  
-  {/* Random jokes tab */}
-  {activeTab === 'random' && (
-    <div className="joke-display-container">
+            <AnimatePresence mode="wait">
+              {/* Random jokes tab */}
+              {activeTab === 'random' && (
+                <motion.div 
+                  key="random"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="joke-display-container"
+                >
       <img src="guns.jpg" alt="guns.jpg" className="joke-image" />
-      <h2>Get your random joke!</h2>
-      <p className="joke-text">"{joke}"</p>
+                  <h2>Get your random joke!</h2>
+                  <motion.p 
+                    key={joke}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="joke-text"
+                  >
+                    "{joke}"
+                  </motion.p>
       
       <div className="joke-controls">
         <input 
@@ -266,16 +302,24 @@ function App() {
         <button className="action-button" id="joke-button-1" onClick={fetchJoke}>
           DRAW A {impersonateName.trim() !== "" ? impersonateName.toUpperCase() : "CHUCK NORRIS"} JOKE
         </button>
-        <button className="action-button" id="joke-button-2" onClick={saveJoke}>
-          SAVE THIS JOKE
-        </button>
-      </div>
-    </div>
-  )}
+                    <button className="action-button" id="joke-button-2" onClick={saveJoke}>
+                      SAVE THIS JOKE
+                    </button>
+                  </div>
+                </motion.div>
+              )}
 
-  {activeTab === 'myJokes' && (
-    <div className="jokes-list-container">
-      <h2 className="section-title">My jokes list</h2>
+              {/* My jokes tab */}
+              {activeTab === 'myJokes' && (
+                <motion.div 
+                  key="myJokes"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="jokes-list-container"
+                >
+                  <h2 className="section-title">My Collection</h2>
       
       {savedJokes.length === 0 ? (
         <p>You don't have any saved jokes yet.</p>
@@ -300,33 +344,40 @@ function App() {
               </button>
             </li>
           ))}
-        </ul>
-      )}
-    </div>
-  )}
+                    </ul>
+                  )}
+                </motion.div>
+              )}
 
-  {/* Add custom joke tab */}
-  {activeTab === 'addJoke' && (
-    <div className="joke-display-container">
-      <h2>Add a Custom Joke</h2>
-      <div className="joke-controls">
-        <input 
+              {/* Add custom joke tab */}
+              {activeTab === 'addJoke' && (
+                <motion.div 
+                  key="addJoke"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="joke-display-container"
+                >
+                  <h2>Add a Custom Joke</h2>
+      <div className="custom-joke-form">
+        <textarea 
           className='joke-input' 
-          type="text" 
           placeholder="Type your own joke here..." 
           value={customJoke}
           onChange={(e) => setCustomJoke(e.target.value)}
+          rows={4}
         />
-      </div>
-      <div className="joke-actions">
-        <button className="action-button" id="joke-button-2" onClick={saveCustomJoke}>
-          SAVE CUSTOM JOKE
-        </button>
-      </div>
-    </div>
-  )}
-
-</div>
+                    <div className="joke-actions">
+                      <button className="action-button" id="joke-button-2" onClick={saveCustomJoke}>
+                        SAVE CUSTOM JOKE
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       ) : (
         // Login or Register
