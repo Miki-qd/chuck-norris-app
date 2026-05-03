@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User } from './user.entity';
 
+// Module bundling authentication controllers and services
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   providers: [AuthService],

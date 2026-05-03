@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import "./App.css";
 
 function App() {
@@ -12,12 +13,12 @@ function App() {
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [impersonateName, setImpersonateName] = useState<string>("");
-
+ 
   const [activeTab, setActiveTab] = useState<'random' | 'myJokes' | 'addJoke'>('random');
   const [savedJokes, setSavedJokes] = useState<any[]>([]);
 
   const [customJoke, setCustomJoke] = useState<string>("");
-
+  // Fetch saved jokes
   const fetchMyJokes = () => {
     fetch(`http://localhost:3000/jokes/${user.email}`)
       .then((res) => res.json())
@@ -25,6 +26,7 @@ function App() {
       .catch(() => console.log('Error fetching saved jokes'));
   };
 
+  // Delete a joke by ID
   const deleteJoke = (id: number) => {
     // Send delete request to backend
     fetch(`http://localhost:3000/jokes/${id}`, {
@@ -36,18 +38,20 @@ function App() {
           // so the joke disappears from the screen immediately, without refreshing the page!
           setSavedJokes(savedJokes.filter((joke) => joke.id !== id));
         } else {
-          alert('Error while deleting joke.');
+          toast.error('Error while deleting joke.');
         }
       })
-      .catch(() => alert('Server connection error.'));
+      .catch(() => toast.error('Server connection error.'));
   };
 
+  // Fetch jokes when 'myJokes' tab is opened
   useEffect(() => {
     if (activeTab === 'myJokes') {
       fetchMyJokes();
     }
   }, [activeTab]);
 
+  // Fetch categories and initial joke when user logs in
   useEffect(() => {
     if (user) {
       fetch("https://api.chucknorris.io/jokes/categories")
@@ -58,6 +62,7 @@ function App() {
     }
   }, [user]);
 
+  // Fetch a random joke from the API
   const fetchJoke = () => {
     let url = "https://api.chucknorris.io/jokes/random";
 
@@ -70,7 +75,7 @@ function App() {
       .then((data) => {
         let fetchedJoke = data.value;
 
-        // Impersonacja
+        // Handle name impersonation by replacing "Chuck Norris" with the user's input
         if (impersonateName.trim() !== "") {
           fetchedJoke = fetchedJoke.replace(/Chuck Norris/gi, impersonateName);
         }
@@ -79,11 +84,11 @@ function App() {
       });
   };
 
-  // --- SAVE JOKE FUNCTION ---
+  // Saves the currently displayed random joke to the user's collection
   const saveJoke = () => {
     // Guard: don't save empty text or a joke while it's loading
     if (!joke || joke === 'Preparing a joke...') {
-      alert('Wait for a joke to be drawn!');
+      toast.error('Wait for a joke to be drawn!');
       return; 
     }
 
@@ -103,18 +108,18 @@ function App() {
     })
       .then((response) => {
         if (response.ok) {
-          alert('Success! Joke added to your collection.');
+          toast.success('Success! Joke added to your collection.');
         } else {
-          alert('Failed to save joke.');
+          toast.error('Failed to save joke.');
         }
       })
-      .catch(() => alert('Server connection error.'));
+      .catch(() => toast.error('Server connection error.'));
   };
 
-  // --- SAVE CUSTOM JOKE FUNCTION ---
+  // Saves a manually entered custom joke to the user's collection
   const saveCustomJoke = () => {
     if (!customJoke || customJoke.trim() === '') {
-      alert('Please type a joke first!');
+      toast.error('Please type a joke first!');
       return;
     }
 
@@ -132,18 +137,22 @@ function App() {
     })
       .then((response) => {
         if (response.ok) {
-          alert('Success! Custom joke added to your collection.');
+          toast.success('Success! Custom joke added to your collection.');
           setCustomJoke('');
         } else {
-          alert('Failed to save custom joke.');
+          toast.error('Failed to save custom joke.');
         }
       })
-      .catch(() => alert('Server connection error.'));
+      .catch(() => toast.error('Server connection error.'));
   };
 
-  // Register function
+  // Handles user registration by sending credentials to the backend
   const handleRegister = (e: any) => {
     e.preventDefault();
+    if (password.length < 8) {
+      toast.error("Password must be at least 8 characters long.");
+      return;
+    }
     fetch("http://localhost:3000/auth/register", {
       method: "POST",
       headers: {
@@ -153,17 +162,17 @@ function App() {
     })
       .then((response) => {
         if (response.ok) {
-          alert("User has been added to the database!");
+          toast.success("User has been added to the database!");
           setAuthMode("login");
           setPassword("");
         } else {
-          alert("Error! User already exists in the database.");
+          toast.error("Error! User already exists in the database.");
         }
       })
-      .catch(() => alert("Registration failed. Please try again."));
+      .catch(() => toast.error("Registration failed. Please try again."));
   };
 
-  // Login function
+  // Handles user login and authenticates the session
   const handleLogin = (e: any) => {
     e.preventDefault();
     fetch("http://localhost:3000/auth/login", {
@@ -179,7 +188,7 @@ function App() {
       })
       .then((data) => {
         if (data && data.email) {
-          alert("Login successful!");
+          toast.success("Login successful!");
         } else {
           throw new Error("Empty user object returned");
         }
@@ -187,33 +196,34 @@ function App() {
       })
       .catch((error) => {
         if (error.message === "Invalid credentials") {
-          alert("Wrong email or password!");
+          toast.error("Wrong email or password!");
         } else {
-          alert("An error occurred during login.");
+          toast.error("An error occurred during login.");
         }
       });
   };
-
+  // Render UI
   return (
     <>
+      <Toaster position="top-center" />
       {user ? (
-        <div className="logged-in-view">
-          <div className="choose-section">
+        <div className="dashboard-layout">
+          <div className="sidebar-container">
             <aside className="sidebar">
               <div className="sidebar-logo">
                 <img src="chuck.png" alt="Logo" />
               </div>
-              <h2 className="title">Welcome, {user.email}!</h2>
+              <h2 className="app-title">Welcome, {user.email}!</h2>
               <nav className="sidebar-nav">
-                <button className={`nav-item ${activeTab === 'random' ? 'active' : ''}`} onClick={() => setActiveTab('random')}>
+                <button className={`nav-button ${activeTab === 'random' ? 'active' : ''}`} onClick={() => setActiveTab('random')}>
                   RANDOM JOKE</button>
-                <button className={`nav-item ${activeTab === 'myJokes' ? 'active' : ''}`} onClick={() => setActiveTab('myJokes')}>
+                <button className={`nav-button ${activeTab === 'myJokes' ? 'active' : ''}`} onClick={() => setActiveTab('myJokes')}>
                   MY JOKES</button>
-                <button className={`nav-item ${activeTab === 'addJoke' ? 'active' : ''}`} onClick={() => setActiveTab('addJoke')}>
+                <button className={`nav-button ${activeTab === 'addJoke' ? 'active' : ''}`} onClick={() => setActiveTab('addJoke')}>
                   ADD JOKE</button>
               </nav>
               <div className="sidebar-footer">
-                <button onClick={() => setUser(null)} className="nav-item">
+                <button onClick={() => setUser(null)} className="nav-button">
                   LOG OUT
                 </button>
                 <p className="footer-text">made with Chuck by Chuck - 2024</p>
@@ -221,26 +231,25 @@ function App() {
             </aside>
           </div>
 
-          <div className="joke-section">
+          <div className="main-content">
   
-  {/* --- TAB 1: RANDOM JOKES --- */}
+  {/* Random jokes tab */}
   {activeTab === 'random' && (
-    <div className="chuck-log">
-      <img src="guns.jpg" alt="guns.jpg" id="guns" />
+    <div className="joke-display-container">
+      <img src="guns.jpg" alt="guns.jpg" className="joke-image" />
       <h2>Get your random joke!</h2>
-      <p className="joke">"{joke}"</p>
+      <p className="joke-text">"{joke}"</p>
       
-      <div className="joke-inputs">
+      <div className="joke-controls">
         <input 
-          className='joke-inside' 
+          className='joke-input' 
           type="text" 
           placeholder="Impersonate Chuck Norris" 
           value={impersonateName}
           onChange={(e) => setImpersonateName(e.target.value)}
         />
-        
         <select 
-          className='joke-inside' 
+          className='joke-input' 
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
         >
@@ -253,20 +262,20 @@ function App() {
         </select>
       </div>
 
-      <div className="joke-buttons">
-        <button className="joke-button" id='joke-button-1' onClick={fetchJoke}>
-          DRAW A JOKE
+      <div className="joke-actions">
+        <button className="action-button" id="joke-button-1" onClick={fetchJoke}>
+          DRAW A {impersonateName.trim() !== "" ? impersonateName.toUpperCase() : "CHUCK NORRIS"} JOKE
         </button>
-        <button className="joke-button" id='joke-button-2' onClick={saveJoke}>
-          SAVE JOKE
+        <button className="action-button" id="joke-button-2" onClick={saveJoke}>
+          SAVE THIS JOKE
         </button>
       </div>
     </div>
   )}
 
   {activeTab === 'myJokes' && (
-    <div className="main-content-inner">
-      <h2 className="content-title my-jokes-title">My jokes list</h2>
+    <div className="jokes-list-container">
+      <h2 className="section-title">My jokes list</h2>
       
       {savedJokes.length === 0 ? (
         <p>You don't have any saved jokes yet.</p>
@@ -296,21 +305,21 @@ function App() {
     </div>
   )}
 
-  {/* --- TAB 3: ADD CUSTOM JOKE --- */}
+  {/* Add custom joke tab */}
   {activeTab === 'addJoke' && (
-    <div className="chuck-log">
+    <div className="joke-display-container">
       <h2>Add a Custom Joke</h2>
-      <div className="joke-inputs">
+      <div className="joke-controls">
         <input 
-          className='joke-inside' 
+          className='joke-input' 
           type="text" 
           placeholder="Type your own joke here..." 
           value={customJoke}
           onChange={(e) => setCustomJoke(e.target.value)}
         />
       </div>
-      <div className="joke-buttons">
-        <button className="joke-button" id='joke-button-2' onClick={saveCustomJoke}>
+      <div className="joke-actions">
+        <button className="action-button" id="joke-button-2" onClick={saveCustomJoke}>
           SAVE CUSTOM JOKE
         </button>
       </div>
@@ -320,22 +329,23 @@ function App() {
 </div>
         </div>
       ) : (
-        <div className="app-container">
-          <div className="chuck-logo">
+        // Login or Register
+        <div className="auth-container">
+          <div className="auth-logo">
             <img src="chuck.png" alt="chuck-norris" />
           </div>
-          <h2 className="title">
+          <h2 className="app-title">
             {authMode === "login" ? "Login" : "Register"}
           </h2>
 
           <form
             onSubmit={authMode === "login" ? handleLogin : handleRegister}
-            className="register-form"
+            className="auth-form"
           >
-            <div className="input-group">
-              <label className="label">E-mail</label>
+            <div className="form-group">
+              <label className="form-label">E-mail</label>
               <input
-                className="input-field"
+                className="form-input"
                 type="email"
                 placeholder="Type your email"
                 value={email}
@@ -344,30 +354,31 @@ function App() {
               />
             </div>
 
-            <div className="input-group">
-              <label className="label">Password</label>
+            <div className="form-group">
+              <label className="form-label">Password</label>
               <input
-                className="input-field"
+                className="form-input"
                 type="password"
                 placeholder="Type your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={8}
               />
             </div>
 
-            <button type="submit" className="submit-button">
+            <button type="submit" className="form-submit-button">
               {authMode === "login" ? "Login" : "Register"}
             </button>
           </form>
 
-          <div className="switch-container">
+          <div className="auth-switch-container">
             {authMode === "login" ? (
               <p>
                 Don't have an account?{" "}
                 <button
                   onClick={() => setAuthMode("register")}
-                  className="switch-button"
+                  className="auth-switch-button"
                 >
                   Register
                 </button>
@@ -377,14 +388,14 @@ function App() {
                 Already have an account?{" "}
                 <button
                   onClick={() => setAuthMode("login")}
-                  className="switch-button"
+                  className="auth-switch-button"
                 >
                   Login
                 </button>
               </p>
             )}
           </div>
-          <p id="footer-text">
+          <p className="auth-footer-text">
             "Chuck Norris can login without signup on any site"
           </p>
         </div>
