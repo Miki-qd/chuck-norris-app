@@ -387,10 +387,30 @@ textarea.joke-input {
   margin: 40px auto 20px;
 }
 
-.custom-joke-form .form-group,
+.custom-joke-form .form-group {
+  grid-column: 1;
+  width: 100%;
+}
+
 .custom-joke-form .action-button {
   grid-column: 1;
   width: 100%;
+  background-color: #868686;
+  box-shadow: 0 4px 6px rgba(130, 130, 130, 0.2);
+  transition: all 0.3s ease;
+}
+
+.custom-joke-form .action-button:hover {
+  background-color: #595959;
+  box-shadow: 0 6px 12px rgba(130, 130, 130, 0.3);
+  transform: translateY(-2px);
+}
+
+.custom-joke-form .action-button:active,
+.custom-joke-form .action-button:focus {
+  transform: translateY(0);
+  outline: none;
+  box-shadow: 0 2px 4px rgba(130, 130, 130, 0.2);
 }
 
 .joke-actions {
@@ -435,8 +455,10 @@ textarea.joke-input {
   transform: translateY(-2px);
 }
 
-#joke-button-1:active {
+#joke-button-1:active,
+#joke-button-1:focus {
   transform: translateY(0);
+  outline: none;
   box-shadow: 0 2px 4px rgba(89, 95, 149, 0.5);
 }
 
@@ -453,8 +475,10 @@ textarea.joke-input {
   transform: translateY(-2px);
 }
 
-#joke-button-2:active {
+#joke-button-2:active,
+#joke-button-2:focus {
   transform: translateY(0);
+  outline: none;
   box-shadow: 0 2px 4px rgba(232, 74, 143, 0.6);
 }
 

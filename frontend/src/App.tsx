@@ -131,7 +131,8 @@ function App() {
   };
 
   // Saves a manually entered custom joke to the user's collection
-  const saveCustomJoke = () => {
+  const saveCustomJoke = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!customJoke || customJoke.trim() === '') {
       toast.error('Please type a joke first!');
       return;
