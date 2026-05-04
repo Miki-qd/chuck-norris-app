@@ -37,7 +37,7 @@ function App() {
     fetch(`http://localhost:3000/jokes/${user.email}`)
       .then((res) => res.json())
       .then((data) => setSavedJokes(data))
-      .catch(() => console.log('Error fetching saved jokes'));
+      .catch(() => {});
   };
 
   // Delete a joke by ID
