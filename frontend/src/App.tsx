@@ -264,7 +264,7 @@ function App() {
                   className="joke-display-container"
                 >
                   <img src="guns.jpg" alt="guns.jpg" className="joke-image" />
-                  <h2>Get your random joke!</h2>
+                  <h1>Get your random joke!</h1>
                   <motion.p
                     key={joke}
                     initial={{ opacity: 0, y: 10 }}

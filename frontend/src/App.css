@@ -324,6 +324,14 @@ p,
   max-width: 800px;
 }
 
+.joke-display-container h1 {
+  text-align: left;
+  width: 100%;
+  max-width: 800px;
+  font-family: 'Josefin Slab', serif;
+  margin-bottom: 20px;
+}
+
 .dark-mode .joke-text {
   color: #ffffff;
 }
@@ -334,7 +342,7 @@ p,
   gap: 15px;
   width: 100%;
   max-width: 800px;
-  margin-top: 20px;
+  margin-top: auto;
 }
 
 .joke-controls .form-group {
