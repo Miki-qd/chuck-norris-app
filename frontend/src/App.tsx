@@ -247,7 +247,7 @@ function App() {
                 <button onClick={() => setUser(null)} className="nav-button">
                   LOG OUT
                 </button>
-                <p className="footer-text">made with Chuck by Chuck - 2024</p>
+                <p className="footer-text">made with Chuck by Chuck - 2026</p>
               </div>
             </aside>
           </div>

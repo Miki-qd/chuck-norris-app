@@ -51,4 +51,4 @@ npm run dev
 
 This project was built as a high-fidelity demonstration of modern web technologies. 
 
-**Made with Chuck by Chuck - 2024**
+**Made by Mikołaj Adamczyk - 2026**
