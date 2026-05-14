@@ -14,6 +14,21 @@ import AddJoke from "./components/AddJoke";
 function App() {
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    if (savedUser && token) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!user) {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+    }
+  }, [user]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const requestData = { email, password };
@@ -43,16 +58,28 @@ function App() {
 
   // Fetch saved jokes
   const fetchMyJokes = () => {
-    fetch(`http://localhost:3000/jokes/${user.email}`)
-      .then((res) => res.json())
+    fetch(`http://localhost:3000/jokes`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Unauthorized');
+        return res.json();
+      })
       .then((data) => setSavedJokes(data))
-      .catch(() => {});
+      .catch(() => {
+        setUser(null); // auto logout if unauthorized
+      });
   };
 
   // Delete a joke by ID
   const deleteJoke = (id: number) => {
     fetch(`http://localhost:3000/jokes/${id}`, {
       method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     })
       .then((res) => {
         if (res.ok) {
@@ -111,7 +138,6 @@ function App() {
     }
 
     const payload = {
-      email: user.email,
       jokeText: joke
     };
 
@@ -119,6 +145,7 @@ function App() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
       body: JSON.stringify(payload),
     })
@@ -141,7 +168,6 @@ function App() {
     }
 
     const payload = {
-      email: user.email,
       jokeText: customJoke
     };
 
@@ -149,6 +175,7 @@ function App() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
       body: JSON.stringify(payload),
     })
@@ -204,12 +231,15 @@ function App() {
         throw new Error("Invalid credentials");
       })
       .then((data) => {
-        if (data && data.email) {
+        if (data && data.access_token) {
           toast.success("Login successful!");
+          localStorage.setItem('token', data.access_token);
+          const userData = { email: data.email };
+          localStorage.setItem('user', JSON.stringify(userData));
+          setUser(userData);
         } else {
-          throw new Error("Empty user object returned");
+          throw new Error("Invalid response from server");
         }
-        setUser(data);
       })
       .catch((error) => {
         if (error.message === "Invalid credentials") {
